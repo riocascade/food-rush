@@ -2401,6 +2401,16 @@ true;const result=await this._runtime.PostComponentMessageToDOMAsync("runtime","
 
 
 self["C3_Shaders"] = {};
+self["C3_Shaders"]["hsladjust"] = {
+	src: "varying mediump vec2 vTex;\nuniform lowp sampler2D samplerFront;\nprecision mediump float;\nuniform float huerotate;\nuniform float satadjust;\nuniform float lumadjust;\nvec3 rgb_to_hsl(vec3 color)\n{\nvec3 hsl = vec3(0.0, 0.0, 0.0);\nfloat fmin = min(min(color.r, color.g), color.b);\nfloat fmax = max(max(color.r, color.g), color.b);\nfloat delta = fmax - fmin;\nhsl.z = (fmax + fmin) / 2.0;\nif (delta == 0.0)\n{\nhsl.x = 0.0;\nhsl.y = 0.0;\n}\nelse\n{\nif (hsl.z < 0.5)\nhsl.y = delta / (fmax + fmin);\nelse\nhsl.y = delta / (2.0 - fmax - fmin);\nfloat dR = (((fmax - color.r) / 6.0) + (delta / 2.0)) / delta;\nfloat dG = (((fmax - color.g) / 6.0) + (delta / 2.0)) / delta;\nfloat dB = (((fmax - color.b) / 6.0) + (delta / 2.0)) / delta;\nif (color.r == fmax)\nhsl.x = dB - dG;\nelse if (color.g == fmax)\nhsl.x = (1.0 / 3.0) + dR - dB;\nelse if (color.b == fmax)\nhsl.x = (2.0 / 3.0) + dG - dR;\nif (hsl.x < 0.0)\nhsl.x += 1.0;\nelse if (hsl.x > 1.0)\nhsl.x -= 1.0;\n}\nreturn hsl;\n}\nfloat hue_to_rgb(float f1, float f2, float hue)\n{\nif (hue < 0.0)\nhue += 1.0;\nelse if (hue > 1.0)\nhue -= 1.0;\nfloat ret;\nif ((6.0 * hue) < 1.0)\nret = f1 + (f2 - f1) * 6.0 * hue;\nelse if ((2.0 * hue) < 1.0)\nret = f2;\nelse if ((3.0 * hue) < 2.0)\nret = f1 + (f2 - f1) * ((2.0 / 3.0) - hue) * 6.0;\nelse\nret = f1;\nreturn ret;\n}\nvec3 hsl_to_rgb(vec3 hsl)\n{\nvec3 rgb = vec3(hsl.z);\nif (hsl.y != 0.0)\n{\nfloat f2;\nif (hsl.z < 0.5)\nf2 = hsl.z * (1.0 + hsl.y);\nelse\nf2 = (hsl.z + hsl.y) - (hsl.y * hsl.z);\nfloat f1 = 2.0 * hsl.z - f2;\nrgb.r = hue_to_rgb(f1, f2, hsl.x + (1.0 / 3.0));\nrgb.g = hue_to_rgb(f1, f2, hsl.x);\nrgb.b = hue_to_rgb(f1, f2, hsl.x - (1.0 / 3.0));\n}\nreturn rgb;\n}\nvoid main(void)\n{\nvec4 front = texture2D(samplerFront, vTex);\nvec3 rgb = rgb_to_hsl(front.rgb) + vec3((huerotate > 0.5 ? huerotate - 1.0 : huerotate), 0, (lumadjust - 1.0) * front.a);\nrgb.y *= satadjust;\nrgb = hsl_to_rgb(rgb);\ngl_FragColor = vec4(rgb, front.a);\n}",
+	extendBoxHorizontal: 0,
+	extendBoxVertical: 0,
+	crossSampling: false,
+	mustPreDraw: false,
+	preservesOpaqueness: true,
+	animated: false,
+	parameters: [["huerotate",0,"percent"],["satadjust",0,"percent"],["lumadjust",0,"percent"]]
+};
 
 
 'use strict';{const C3=self.C3;let cacheRegex=null;let lastRegex="";let lastFlags="";let regexMatches=[];let lastMatchesStr="";let lastMatchesRegex="";let lastMatchesFlags="";const forEachStack=C3.New(C3.ArrayStack);function ForEachOrdered_SortInstances(a,b){const va=a[1];const vb=b[1];if(typeof va==="number"&&typeof vb==="number")return va-vb;else{const sa=""+va;const sb=""+vb;if(sa<sb)return-1;else if(sa>sb)return 1;else return 0}}C3.Plugins.System=class SystemPlugin extends C3.SDKPluginBase{constructor(opts){super(opts);
@@ -2969,6 +2979,7 @@ value:this._waitTime,onedit:v=>this._waitTime=v},{name:prefix+".properties.fade-
 		C3.Plugins.Browser.Acts.ConsoleLog,
 		C3.Plugins.System.Cnds.ForEach,
 		C3.Plugins.Sprite.Acts.SetVisible,
+		C3.Plugins.Sprite.Acts.SetEffectParam,
 		C3.Plugins.System.Cnds.For,
 		C3.Plugins.System.Exps.choose,
 		C3.Plugins.Arr.Acts.Push,
@@ -3170,6 +3181,8 @@ value:this._waitTime,onedit:v=>this._waitTime=v},{name:prefix+".properties.fade-
 			return () => and("Skor: ", v0.GetValue());
 		},
 		() => "timer",
+		() => "AdjustHSL",
+		() => 100,
 		() => "",
 		p => {
 			const v0 = p._GetNode(0).GetVar();
