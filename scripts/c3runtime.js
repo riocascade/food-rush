@@ -3043,6 +3043,8 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		C3.Plugins.System.Acts.SubVar,
 		C3.Plugins.System.Cnds.Else,
 		C3.Plugins.Arr.Exps.Width,
+		C3.Plugins.Sprite.Acts.SetEffectParam,
+		C3.Plugins.Sprite.Acts.SetInstanceVar,
 		C3.Plugins.Sprite.Acts.SetAnimFrame,
 		C3.Plugins.Sprite.Acts.SetX,
 		C3.Plugins.Timeline.Acts.StopTimelineByTags,
@@ -3056,6 +3058,8 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		C3.Plugins.Sprite.Cnds.CompareInstanceVar,
 		C3.Plugins.Sprite.Exps.UID,
 		C3.Plugins.Sprite.Acts.Destroy,
+		C3.Plugins.Sprite.Cnds.IsBoolInstanceVarSet,
+		C3.Plugins.Sprite.Acts.SubInstanceVar,
 		C3.Plugins.Timeline.Acts.ResumeTimelineByTags,
 		C3.Plugins.LocalStorage.Acts.SetItem,
 		C3.Plugins.Timeline.Acts.StopAllTimelines,
@@ -3074,14 +3078,13 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		C3.Behaviors.Bullet.Acts.SetAngleOfMotion,
 		C3.Behaviors.Bullet.Acts.SetSpeed,
 		C3.Plugins.Sprite.Acts.Spawn,
-		C3.Plugins.Sprite.Acts.SetInstanceVar,
 		C3.Plugins.Arr.Exps.At,
 		C3.Plugins.Sprite.Acts.SetWidth,
 		C3.Plugins.System.Exps.random,
 		C3.Plugins.Sprite.Acts.SetAnim,
 		C3.Behaviors.Pin.Acts.PinByProperties,
 		C3.Plugins.Sprite.Cnds.IsOverlapping,
-		C3.Plugins.Sprite.Acts.SetEffectParam
+		C3.Plugins.Sprite.Acts.SetBoolInstanceVar
 		];
 	};
 	self.C3_JsPropNameTable = [
@@ -3102,6 +3105,7 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		{Logo: 0},
 		{PlayBtn: 0},
 		{initPos: 0},
+		{cook: 0},
 		{Egg: 0},
 		{Overlay: 0},
 		{TopBar: 0},
@@ -3112,6 +3116,7 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		{Fade: 0},
 		{ButtonMove: 0},
 		{pattern: 0},
+		{wrong: 0},
 		{Bullet: 0},
 		{TargetBar: 0},
 		{pointer: 0},
@@ -3265,6 +3270,9 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject();
 		},
+		() => "AdjustHSL",
+		() => 2,
+		() => 100,
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpInstVar();
@@ -3279,6 +3287,10 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		p => {
 			const n0 = p._GetNode(0);
 			return () => (0 - n0.ExpObject());
+		},
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			return () => (100 / v0.GetValue());
 		},
 		p => {
 			const n0 = p._GetNode(0);
@@ -3315,8 +3327,7 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 			const v1 = p._GetNode(1).GetVar();
 			const v2 = p._GetNode(2).GetVar();
 			return () => f0(v1.GetValue(), v2.GetValue());
-		},
-		() => "AdjustHSL"
+		}
 	];
 }
 
