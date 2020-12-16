@@ -3308,6 +3308,11 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 			const v0 = p._GetNode(0).GetVar();
 			return () => and("Score: ", v0.GetValue());
 		},
+		() => "wave",
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			return () => and("Masakan ke: ", v0.GetValue());
+		},
 		() => "egg flip top",
 		() => "egg pan",
 		() => "",
