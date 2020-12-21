@@ -3336,7 +3336,7 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		},
 		p => {
 			const n0 = p._GetNode(0);
-			return () => Math.round((n0.ExpObject() * 0.5));
+			return () => Math.round((n0.ExpObject() * 0.7));
 		},
 		() => 50,
 		p => {
