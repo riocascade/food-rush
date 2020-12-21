@@ -3026,6 +3026,7 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		C3.Plugins.System.Cnds.OnLayoutStart,
 		C3.Plugins.System.Acts.SetBoolVar,
 		C3.Plugins.LocalStorage.Acts.CheckItemExists,
+		C3.Plugins.Sprite.Acts.SetVisible,
 		C3.Plugins.LocalStorage.Cnds.OnItemExists,
 		C3.Plugins.LocalStorage.Acts.GetItem,
 		C3.Plugins.LocalStorage.Cnds.OnItemGet,
@@ -3043,6 +3044,7 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		C3.Plugins.System.Acts.SubVar,
 		C3.Plugins.System.Cnds.Else,
 		C3.Plugins.Arr.Exps.Width,
+		C3.Plugins.System.Exps.random,
 		C3.Plugins.Sprite.Acts.SetEffectParam,
 		C3.Plugins.Sprite.Acts.SetInstanceVar,
 		C3.Plugins.Sprite.Acts.SetAnimFrame,
@@ -3060,6 +3062,7 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		C3.Plugins.Sprite.Acts.Destroy,
 		C3.Plugins.Sprite.Cnds.IsBoolInstanceVarSet,
 		C3.Plugins.Sprite.Acts.SubInstanceVar,
+		C3.Plugins.Browser.Acts.ConsoleLog,
 		C3.Plugins.Timeline.Acts.ResumeTimelineByTags,
 		C3.Plugins.LocalStorage.Acts.SetItem,
 		C3.Plugins.Timeline.Acts.StopAllTimelines,
@@ -3080,11 +3083,17 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		C3.Plugins.Sprite.Acts.Spawn,
 		C3.Plugins.Arr.Exps.At,
 		C3.Plugins.Sprite.Acts.SetWidth,
-		C3.Plugins.System.Exps.random,
 		C3.Plugins.Sprite.Acts.SetAnim,
 		C3.Behaviors.Pin.Acts.PinByProperties,
 		C3.Plugins.Sprite.Cnds.IsOverlapping,
-		C3.Plugins.Sprite.Acts.SetBoolInstanceVar
+		C3.Plugins.Sprite.Acts.SetBoolInstanceVar,
+		C3.Behaviors.Sin.Acts.SetPhase,
+		C3.Plugins.Sprite.Acts.SetOpacity,
+		C3.Behaviors.Sin.Acts.SetEnabled,
+		C3.Behaviors.Fade.Acts.SetWaitTime,
+		C3.Behaviors.Fade.Acts.SetFadeOutTime,
+		C3.Behaviors.Fade.Acts.SetFadeInTime,
+		C3.Behaviors.Fade.Acts.StartFade
 		];
 	};
 	self.C3_JsPropNameTable = [
@@ -3122,7 +3131,16 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		{pointer: 0},
 		{Trigger: 0},
 		{TargetBarSpawn: 0},
+		{LeaderboardBtn: 0},
+		{AchievementBtn: 0},
+		{ShopBtn: 0},
+		{ButtonMove2: 0},
+		{Shadow: 0},
+		{TopBarShadow: 0},
+		{Emot: 0},
+		{ResultText: 0},
 		{MoveFam: 0},
+		{result: 0},
 		{highScore: 0},
 		{gameScore: 0},
 		{gameWave: 0},
@@ -3136,6 +3154,8 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 		{DOWN: 0},
 		{maxTargetWidth: 0},
 		{minTargetWidth: 0},
+		{maxInterval: 0},
+		{minInterval: 0},
 		{interval: 0},
 		{PATTERN_INTERVAL: 0},
 		{GAME_INTERVAL: 0},
@@ -3270,6 +3290,12 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject();
 		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
+			const v2 = p._GetNode(2).GetVar();
+			return () => f0(v1.GetValue(), v2.GetValue());
+		},
 		() => "AdjustHSL",
 		() => 2,
 		() => 100,
@@ -3296,13 +3322,31 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 			const n0 = p._GetNode(0);
 			return () => (n0.ExpObject() - 1);
 		},
-		() => 3,
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			return () => and("correct ", v0.GetValue());
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => and("pass limit ", Math.round((n0.ExpObject() * 0.5)));
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => and("total patern ", Math.round(n0.ExpObject()));
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => Math.round((n0.ExpObject() * 0.5));
+		},
 		() => 50,
 		p => {
 			const v0 = p._GetNode(0).GetVar();
 			return () => (1 * v0.GetValue());
 		},
 		() => "throw egg",
+		() => "perfect",
+		() => "good",
+		() => 0.2,
 		() => "score",
 		p => {
 			const v0 = p._GetNode(0).GetVar();
@@ -3327,12 +3371,7 @@ const map=new WeakMap;self.IBulletBehaviorInstance=class IBulletBehaviorInstance
 			const v1 = p._GetNode(1).GetVar();
 			return () => n0.ExpObject(v1.GetValue());
 		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const v1 = p._GetNode(1).GetVar();
-			const v2 = p._GetNode(2).GetVar();
-			return () => f0(v1.GetValue(), v2.GetValue());
-		}
+		() => 0.5
 	];
 }
 
